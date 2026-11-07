@@ -8,7 +8,7 @@ Golden corpus for [`terminal-protocol`](https://github.com/egao1980/terminal-pro
 | `corpus/expected.sexp` | **Generated** by the oracle: replies, encoded input bytes, and a canonical snapshot per fixture |
 | `corpus/palette.sexp` | **Generated**: the oracle's default foreground, background and 256-colour palette |
 
-98 fixtures cover C0 controls, wrapping and pending wrap, cursor motion, DECSC/DECRC, erase/edit (ED EL ECH ICH DCH IL DL IRM REP), scroll regions and SU/SD, SGR (16/256/truecolor, colon forms, underline styles and colour), modes, the 1049 alternate screen, RIS, OSC 0/2/7, DSR/DA/DECRQM replies, UTF-8, wide and combining characters, keys (plain, arrows in both cursor modes, nav, F-keys, modifiers), mouse (X10 and SGR, motion, wheel, modifiers), focus, bracketed paste, and resize.
+113 fixtures cover C0 controls, wrapping and pending wrap, cursor motion, DECSC/DECRC, erase/edit (ED EL ECH ICH DCH IL DL IRM REP), scroll regions and SU/SD, SGR (16/256/truecolor, colon forms, underline styles and colour), modes, the 1049 alternate screen, RIS, OSC 0/2/7, DSR/DA/DECRQM replies, UTF-8, wide and combining characters, keys (plain, arrows in both cursor modes, nav, F-keys, modifiers), mouse (X10 and SGR, motion, wheel, modifiers), focus, bracketed paste, resize, OSC 8 hyperlinks, and Kitty graphics (raw RGB/RGBA, chunked, transmit-then-place, query, errors, delete, source rectangles, offsets, z / layer, zlib under `:kitty-zlib`). When the backend claims `:kitty-graphics` and an image is visible, the snapshot also records `:images` (placements) and `:image-data` (pixels as hex).
 
 ## Notation
 

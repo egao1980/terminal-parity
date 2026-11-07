@@ -34,9 +34,42 @@
       (add :link (tp:style-hyperlink style) (tp:style-hyperlink d)))
     (nreverse out)))
 
+(defun %hex (octets)
+  (with-output-to-string (s)
+    (loop for b across octets do (format s "~(~2,'0x~)" b))))
+
+(defun %images (terminal)
+  "→ (values placements image-data), or NIL NIL when no image is visible."
+  (let ((placements (tp:with-frame (frame terminal) (tp:frame-images frame))))
+    (when placements
+      (values
+       (mapcar (lambda (p)
+                 (list :id (tp:image-placement-image-id p)
+                       :placement (tp:image-placement-placement-id p)
+                       :at (list (tp:image-placement-x p) (tp:image-placement-y p))
+                       :cells (list (tp:image-placement-cols p) (tp:image-placement-rows p))
+                       :z (tp:image-placement-z p)
+                       :layer (tp:image-placement-layer p)
+                       :offset (list (tp:image-placement-cell-offset-x p)
+                                     (tp:image-placement-cell-offset-y p))
+                       :pixels (list (tp:image-placement-pixel-width p)
+                                     (tp:image-placement-pixel-height p))
+                       :source (list (tp:image-placement-source-x p) (tp:image-placement-source-y p)
+                                     (tp:image-placement-source-width p)
+                                     (tp:image-placement-source-height p))))
+               placements)
+       (loop for id in (remove-duplicates (mapcar #'tp:image-placement-image-id placements))
+             for image = (tp:terminal-image terminal id)
+             when image
+               collect (list id (tp:terminal-image-width image) (tp:terminal-image-height image)
+                             (tp:terminal-image-format image)
+                             (%hex (tp:terminal-image-pixels image))))))))
+
 (defun canonical-snapshot (terminal)
   "→ (:LINES … :CURSOR (x y visible-p) :TITLE … :PWD … :SCREEN …
-      :MODES (set-mode …) :CELLS ((x y text width style-diff) …))"
+      :MODES (set-mode …) :CELLS ((x y text width style-diff) …))
+plus :IMAGES (placements) and :IMAGE-DATA ((id w h format hex-pixels) …)
+when the backend has :KITTY-GRAPHICS and an image is visible."
   (let* ((snap (tp:terminal-snapshot terminal))
          (cursor (getf snap :cursor))
          (cells '()))
@@ -48,6 +81,10 @@
                    when (or diff (not (eq (tp:cell-width cell) :narrow)))
                      do (push (list x y (tp:cell-text cell) (tp:cell-width cell) diff)
                               cells)))
+    (multiple-value-bind (images image-data)
+        (when (tp:backend-supports-p (tp:terminal-backend-of terminal) :kitty-graphics)
+          (%images terminal))
+    (append
     (list :lines (getf snap :lines)
           :cursor (when cursor
                     (list (tp:cursor-x cursor) (tp:cursor-y cursor)
@@ -56,4 +93,6 @@
           :pwd (getf snap :pwd)
           :screen (getf snap :screen)
           :modes (remove-if-not (lambda (m) (tp:terminal-mode terminal m)) *parity-modes*)
-          :cells (nreverse cells))))
+          :cells (nreverse cells))
+    ;; Only when an image is visible, so image-free fixtures stay unchanged.
+    (when images (list :images images :image-data (sort image-data #'< :key #'first)))))))
