@@ -166,3 +166,34 @@
 (:name "resize-grow" :cols 5 :rows 2 :feed "abc" :then ((:resize 8 3) (:feed "de")))
 (:name "resize-shrink-rows" :cols 5 :rows 4
  :feed "1{cr}{lf}2{cr}{lf}3{cr}{lf}4" :then ((:resize 5 2)))
+
+;;; --- Kitty graphics (APC G) ---------------------------------------------
+;;; {esc}_G<keys>;<base64>{st}. Compressed (o=z) payloads carry an extra
+;;; feature so a backend can claim raw pixels alone. PNG (f=100) fixtures come
+;;; with image-protocol, which supplies the decoder libghostty-vt asks for.
+
+(:name "kitty-rgb-direct" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=7,f=24,s=2,v=1,c=2,r=1;/wAAAP8A{st}")
+(:name "kitty-rgba-natural-size" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=8,f=32,s=2,v=2,q=2;/wAA/wD/AP8AAP//////gA=={st}")
+(:name "kitty-transmit-then-place" :cols 10 :rows 4 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=t,i=3,f=24,s=2,v=1;/wAAAP8A{st}{csi}2;3H{esc}_Ga=p,i=3,p=5,z=-1,c=3,r=2{st}")
+(:name "kitty-cursor-stays" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=2,f=24,s=2,v=1,c=2,r=2,C=1,q=2;/wAAAP8A{st}x")
+(:name "kitty-offset-and-z" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=6,f=24,s=2,v=1,X=3,Y=4,z=5,q=2;/wAAAP8A{st}")
+(:name "kitty-source-rect" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=5,f=24,s=4,v=1,x=1,w=2,c=2,r=1,q=2;AQIDBAUGBwgJCgsM{st}")
+(:name "kitty-chunked" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=4,f=24,s=4,v=1,c=4,r=1,q=2,m=1;AQIDBAUG{st}{esc}_Gm=0;BwgJCgsM{st}")
+(:name "kitty-query" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=q,i=9,f=24,s=1,v=1;AAAA{st}")
+(:name "kitty-bad-size-error" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=10,f=24,s=3,v=1;/wAAAP8A{st}")
+(:name "kitty-delete-by-id" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=T,i=7,f=24,s=2,v=1,c=2,r=1,q=2;/wAAAP8A{st}{esc}_Ga=d,d=i,i=7,q=2{st}")
+(:name "kitty-two-placements" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics)
+ :feed "{esc}_Ga=t,i=1,f=24,s=2,v=1,q=2;/wAAAP8A{st}{esc}_Ga=p,i=1,p=1,c=1,r=1,q=2{st}{csi}2;5H{esc}_Ga=p,i=1,p=2,c=2,r=1,q=2{st}")
+(:name "kitty-zlib" :cols 10 :rows 3 :cell-pixels (10 20) :features (:kitty-graphics :kitty-zlib)
+ :feed "{esc}_Ga=T,i=11,f=24,s=2,v=1,o=z,c=2,r=1,q=2;eJz7z8DA8J8BAAf+Af8={st}")
+

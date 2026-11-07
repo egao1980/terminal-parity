@@ -8,6 +8,7 @@
 ;;;    :feed "{csi}1mB"
 ;;;    :then ((:key :arrow-up :modifiers (:ctrl)) (:mouse :left :press 1 2)
 ;;;           (:focus t) (:paste "x") (:feed "…") (:resize 20 4)))
+;;; :CELL-PIXELS (w h) sets the cell size in pixels (Kitty graphics needs it).
 ;;; An expected fixture adds :replies (notation), :encoded (one notation
 ;;; string per encoding step) and :expect (CANONICAL-SNAPSHOT).
 

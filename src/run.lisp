@@ -41,6 +41,10 @@ as an expected fixture."
   (tp:with-terminal (terminal :backend backend
                               :cols (getf fixture :cols 20)
                               :rows (getf fixture :rows 5))
+    (let ((px (getf fixture :cell-pixels)))
+      (when px
+        (tp:terminal-resize terminal (getf fixture :cols 20) (getf fixture :rows 5)
+                            :cell-width-px (first px) :cell-height-px (second px))))
     (when (getf fixture :feed)
       (%feed terminal (getf fixture :feed) split))
     (let ((encoded (loop for step in (getf fixture :then)
