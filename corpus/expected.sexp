@@ -347,6 +347,25 @@
  (:LINES ("" "") :CURSOR (0 0 T) :TITLE NIL :PWD "file://host/tmp/dir" :SCREEN :PRIMARY :MODES
   (:WRAPAROUND :CURSOR-VISIBLE) :CELLS NIL))
 
+(:NAME "osc8-link" :COLS 10 :ROWS 2 :FEED "{osc}8;;https://x.test/{st}ab{osc}8;;{st}c" :REPLIES ""
+ :ENCODED NIL :EXPECT
+ (:LINES ("abc" "") :CURSOR (3 0 T) :TITLE NIL :PWD NIL :SCREEN :PRIMARY :MODES
+  (:WRAPAROUND :CURSOR-VISIBLE) :CELLS
+  ((0 0 "a" :NARROW (:LINK "https://x.test/")) (1 0 "b" :NARROW (:LINK "https://x.test/")))))
+
+(:NAME "osc8-link-id-param" :COLS 10 :ROWS 2 :FEED
+ "{osc}8;id=1;https://y.test/{bel}xy{osc}8;;{bel}" :REPLIES "" :ENCODED NIL :EXPECT
+ (:LINES ("xy" "") :CURSOR (2 0 T) :TITLE NIL :PWD NIL :SCREEN :PRIMARY :MODES
+  (:WRAPAROUND :CURSOR-VISIBLE) :CELLS
+  ((0 0 "x" :NARROW (:LINK "https://y.test/")) (1 0 "y" :NARROW (:LINK "https://y.test/")))))
+
+(:NAME "osc8-survives-sgr-reset" :COLS 10 :ROWS 2 :FEED
+ "{osc}8;;https://z.test/{st}{csi}1ma{csi}0mb{osc}8;;{st}c" :REPLIES "" :ENCODED NIL :EXPECT
+ (:LINES ("abc" "") :CURSOR (3 0 T) :TITLE NIL :PWD NIL :SCREEN :PRIMARY :MODES
+  (:WRAPAROUND :CURSOR-VISIBLE) :CELLS
+  ((0 0 "a" :NARROW (:BOLD T :LINK "https://z.test/"))
+   (1 0 "b" :NARROW (:LINK "https://z.test/")))))
+
 (:NAME "osc-unknown-ignored" :COLS 10 :ROWS 2 :FEED "{osc}9999;zzz{bel}ok" :REPLIES "" :ENCODED NIL
  :EXPECT
  (:LINES ("ok" "") :CURSOR (2 0 T) :TITLE NIL :PWD NIL :SCREEN :PRIMARY :MODES
