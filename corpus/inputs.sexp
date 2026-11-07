@@ -101,6 +101,10 @@
 (:name "osc-title-bel" :cols 10 :rows 2 :feed "{osc}2;hello{bel}x")
 (:name "osc-title-st" :cols 10 :rows 2 :feed "{osc}0;both{st}x")
 (:name "osc-pwd" :cols 10 :rows 2 :feed "{osc}7;file://host/tmp/dir{bel}")
+(:name "osc8-link" :cols 10 :rows 2 :feed "{osc}8;;https://x.test/{st}ab{osc}8;;{st}c")
+(:name "osc8-link-id-param" :cols 10 :rows 2 :feed "{osc}8;id=1;https://y.test/{bel}xy{osc}8;;{bel}")
+(:name "osc8-survives-sgr-reset" :cols 10 :rows 2
+ :feed "{osc}8;;https://z.test/{st}{csi}1ma{csi}0mb{osc}8;;{st}c")
 (:name "osc-unknown-ignored" :cols 10 :rows 2 :feed "{osc}9999;zzz{bel}ok")
 
 ;;; --- Replies --------------------------------------------------------------
